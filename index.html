@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ma</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&family=EB+Garamond:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+
+  <aside class="sidebar" aria-label="Notebooks">
+    <div class="sidebar-head">
+      <span class="mark">間</span>
+      <button class="icon-btn" id="newNotebookBtn" title="New notebook">+</button>
+    </div>
+    <nav class="notebook-list" id="notebookList"></nav>
+    <div class="sidebar-foot">
+      <button class="icon-btn" id="connectBtn">connect drive</button>
+      <button class="icon-btn" id="syncNowBtn">sync now</button>
+      <span class="sync-status" id="syncStatus">offline</span>
+    </div>
+  </aside>
+
+  <aside class="doclist" aria-label="Documents">
+    <div class="doclist-head">
+      <span id="activeNotebookName">—</span>
+      <button class="icon-btn" id="newDocBtn" title="New document">+</button>
+    </div>
+    <div class="doc-search">
+      <input type="text" id="docSearch" placeholder="search all notebooks…" autocomplete="off">
+    </div>
+    <div class="doc-items" id="docItems"></div>
+  </aside>
+
+  <main class="editor-wrap">
+    <div class="editor-top">
+      <input type="text" id="docTitle" class="doc-title" placeholder="Untitled" autocomplete="off">
+      <div style="position:relative;">
+        <button class="icon-btn tag-btn" id="tagBtn" title="Edit tags">tags</button>
+        <div class="tag-popover" id="tagPopover" hidden>
+          <div class="tag-chips" id="tagChips"></div>
+          <input type="text" id="tagInput" placeholder="add tag, press enter">
+        </div>
+      </div>
+      <div class="editor-top-actions">
+        <button class="icon-btn" id="formatBtn" title="Format (Ctrl/Cmd+Shift+F)">format ▾</button>
+        <div class="menu-panel" id="formatMenu" hidden>
+          <div class="menu-row">
+            <label>Style</label>
+            <select id="styleSelect">
+              <option value="normal">Normal text</option>
+              <option value="title">Title</option>
+              <option value="subtitle">Subtitle</option>
+              <option value="h1">Heading 1</option>
+              <option value="h2">Heading 2</option>
+              <option value="h3">Heading 3</option>
+            </select>
+          </div>
+          <div class="menu-row">
+            <label>Font</label>
+            <select id="fontSelect">
+              <option value="'Source Serif 4', Georgia, serif">Source Serif</option>
+              <option value="'EB Garamond', Georgia, serif">EB Garamond</option>
+              <option value="Georgia, serif">Georgia</option>
+              <option value="'Inter', -apple-system, sans-serif">Inter</option>
+              <option value="'IBM Plex Mono', monospace">IBM Plex Mono</option>
+              <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
+              <option value="'Comic Neue', 'Comic Sans MS', cursive">Comic Sans</option>
+            </select>
+          </div>
+          <div class="menu-row">
+            <label>Size</label>
+            <div class="btn-row" id="sizeRow">
+              <button data-size="16">S</button>
+              <button data-size="19" class="active">M</button>
+              <button data-size="22">L</button>
+              <button data-size="26">XL</button>
+            </div>
+          </div>
+          <div class="menu-row">
+            <label>Style (selection)</label>
+            <div class="btn-row">
+              <button id="boldBtn" title="Bold (Ctrl/Cmd+B)"><b>B</b></button>
+              <button id="italicBtn" title="Italic (Ctrl/Cmd+I)"><i>I</i></button>
+            </div>
+          </div>
+          <div class="menu-divider"></div>
+          <div class="toggle-row">
+            <label for="ruledToggle">Page lines</label>
+            <input type="checkbox" id="ruledToggle">
+          </div>
+          <div class="toggle-row">
+            <label for="typewriterToggle">Typewriter scrolling</label>
+            <input type="checkbox" id="typewriterToggle">
+          </div>
+          <div class="menu-row">
+            <label>Dim while writing (focus mode)</label>
+            <select id="dimSelect">
+              <option value="line">Current line</option>
+              <option value="paragraph">Current paragraph</option>
+              <option value="off">Off</option>
+            </select>
+          </div>
+          <div class="menu-divider"></div>
+          <div class="menu-row">
+            <label>Pages (words per page, 0 = off)</label>
+            <input type="number" id="pageWords" value="0" min="0" step="50">
+          </div>
+        </div>
+
+        <button class="icon-btn" id="toolsBtn" title="Tools">tools ▾</button>
+        <div class="menu-panel" id="toolsMenu" hidden>
+          <div class="menu-row">
+            <label>Find &amp; replace (Ctrl/Cmd+F)</label>
+            <input type="text" id="findInput" placeholder="find">
+            <input type="text" id="replaceInput" placeholder="replace with">
+            <div class="btn-row">
+              <button id="findNextBtn">find next</button>
+              <button id="replaceAllBtn">replace all</button>
+            </div>
+          </div>
+          <div class="menu-divider"></div>
+          <div class="menu-row">
+            <label>Word count</label>
+            <div class="stat-line"><span>Words</span><b id="statWords">0</b></div>
+            <div class="stat-line"><span>Characters</span><b id="statChars">0</b></div>
+            <div class="stat-line"><span>Characters (no spaces)</span><b id="statCharsNoSpace">0</b></div>
+            <div class="stat-line"><span>Paragraphs</span><b id="statParas">0</b></div>
+          </div>
+          <div class="menu-divider"></div>
+          <div class="toggle-row">
+            <label for="marksToggle">Show formatting marks (¶)</label>
+            <input type="checkbox" id="marksToggle">
+          </div>
+          <div class="menu-divider"></div>
+          <div class="menu-row">
+            <label>Export</label>
+            <div class="btn-row">
+              <button id="exportTabBtn">this tab (.md)</button>
+              <button id="exportDocBtn">whole doc (.md)</button>
+            </div>
+          </div>
+        </div>
+
+        <button class="icon-btn" id="themeBtn" title="Theme">theme ▾</button>
+        <div class="menu-panel theme-menu" id="themeMenu" hidden>
+          <button data-theme-choice="light" class="active">light</button>
+          <button data-theme-choice="sepia">sepia</button>
+          <button data-theme-choice="dark">dark</button>
+        </div>
+
+        <button class="icon-btn" id="focusBtn" title="Focus mode">focus</button>
+      </div>
+    </div>
+
+    <div class="tabs-bar" id="tabsBar"></div>
+
+    <div class="editor-scroll">
+      <div class="editor-column" id="editorColumn">
+        <div id="editor" class="editor" contenteditable="true" spellcheck="true"></div>
+      </div>
+    </div>
+
+    <div class="status-bar">
+      <span id="wordCount">0 words</span>
+      <span class="dot">·</span>
+      <span id="pageCount">1 page</span>
+      <span class="dot">·</span>
+      <span id="tagLine">no tags</span>
+      <span class="spacer"></span>
+      <span id="savedState">saved</span>
+    </div>
+  </main>
+
+
+  <div class="cmdk-overlay" id="cmdkOverlay" hidden>
+    <div class="cmdk-box">
+      <input type="text" id="cmdkInput" placeholder="Jump to a document…" autocomplete="off">
+      <div class="cmdk-results" id="cmdkResults"></div>
+    </div>
+  </div>
+
+<script src="js/db.js"></script>
+<script src="js/markdown.js"></script>
+<script src="js/sync.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
