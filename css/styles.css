@@ -2,8 +2,8 @@
 :root {
   --font-serif: 'Source Serif 4', Georgia, serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-  --editor-width: 680px;
-  --editor-width-focus: 620px;
+  --editor-width: clamp(320px, 92vw, 680px);
+  --editor-width-focus: clamp(300px, 88vw, 620px);
   --radius: 3px;
   --transition: 320ms cubic-bezier(0.4, 0, 0.2, 1);
   --editor-font: var(--font-serif);
@@ -153,7 +153,7 @@ body.focus-mode .editor-column { max-width: var(--editor-width-focus); }
 .editor .title { font-weight: 600; font-size: 1.8em; line-height: 1.2; }
 .editor .subtitle { color: var(--ink-dim); font-style: italic; font-size: 1.05em; }
 .editor .quote { border-left: 2px solid var(--ink-faint); padding-left: 14px; color: var(--ink-dim); font-style: italic; }
-.editor .li { padding-left: 4px; }
+.editor .li { padding-left: 32px; }
 .editor code { font-family: var(--font-mono); background: var(--bg-raised); padding: 0.1em 0.35em; border-radius: var(--radius); font-size: 0.85em; }
 
 body.focus-mode .editor-top, body.focus-mode .status-bar { opacity: 0.25; transition: opacity var(--transition); }
